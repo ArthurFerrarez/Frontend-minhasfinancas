@@ -2,22 +2,45 @@ import { Component } from "react";
 import Card from "../components/Card";
 import FormGroup from "../components/FormGroup";
 
+import { withRouter } from "react-router-dom";
+import UsuarioService from '../service/UsuarioService';
+import { mensagemErro } from "../components/Toastr";
+import { AuthContext } from "../ProvedorAutentificacao";
+
 class Login extends Component {
 
   state = {
     email: "",
-    senha: ""
+    senha: "",
+  }
+
+  constructor(){
+    super();
+    this.service = new UsuarioService();
   }
 
   Entrar = () => {
-    console.log('Email: ', this.state.email)
-    console.log('Senha: ', this.state.senha)
+    this.service.autenticar({
+      email: this.state.email,
+      senha: this.state.senha
+    }).then(resp => {
+      // Assim q colocar pegar os dados do usuario e armzenar em algum lugar, nesse caso no localStorage
+      // localStorage.setItem('_usuario_logado', JSON.stringify(resp.data))
+      this.context.iniciarSessao(resp.data)
+      this.props.history.push("/home")
+    }).catch(err => {
+      mensagemErro(err.response.data)
+    })
+  }
+
+  prepareCadastrar = () => {
+    // Esse history vem do withRouter do react-router-dom
+    this.props.history.push('/cadastro-usuario')
   }
 
   render(){
 
     return(
-        <div className="container">
           <div className="row">
             <div className="col-md-6" style={{position: 'relative', left:'300px'}}>
               <div className="bs-docs-section">
@@ -49,8 +72,13 @@ class Login extends Component {
                               placeholder="Digite sua Senha..."
                             />
                           </FormGroup>
-                          <button onClick={this.Entrar} className="btn btn-success m-2">Entrar</button>
-                          <button className="btn btn-danger m-2">Cadastrar</button>
+                          <button onClick={this.Entrar} className="btn btn-outline-success m-2">
+                          <i className="pi pi-sign-in mx-1"></i>
+                            Entrar</button>
+
+                          <button onClick={this.prepareCadastrar} className="btn btn-outline-info m-2">
+                            <i className="pi pi-plus mx-1"></i>
+                            Cadastrar</button>
                         </fieldset>
                       </div>
                     </div>
@@ -59,9 +87,9 @@ class Login extends Component {
               </div>
             </div>
           </div>
-        </div>
     )
   }
 }
+Login.contextType = AuthContext;
 
-export default Login;
+export default withRouter(Login);
