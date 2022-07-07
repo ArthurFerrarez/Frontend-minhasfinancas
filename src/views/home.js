@@ -46,11 +46,11 @@ class Home extends Component{
               dos menus ou botões para navegar pelo sistema.
             </p>
             <p className="lead">
-              <a href="#/cadastro-usuario" className="btn btn-info btn-lg m-2"
+              <a href="/cadastro-usuario" className="btn btn-info btn-lg m-2"
                 role="button">
                 <i className="fa fa-users"></i> Cadastrar Usuário
               </a>
-              <a href="#/cadastro-lancamentos" className="btn btn-danger btn-lg m-2" 
+              <a href="/cadastro-lancamentos" className="btn btn-danger btn-lg m-2" 
               role="button">
                 <i className="fa fa-money-bill "></i> Cadastrar Lançamento
               </a>
